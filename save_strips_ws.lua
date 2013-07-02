@@ -27,8 +27,15 @@ events.connect('file_after_save',
       local col = buffer.column[buffer.current_pos]
       local diff = saved_col - col
       if diff > 0 then
-        for i=1, diff do
-          buffer:char_right()
+        -- if using tabs
+        if true == buffer.use_tabs then
+          for i=1, math.floor( diff / buffer.tab_width ) do
+            buffer:tab()
+          end
+        else
+          for i=1, diff do
+            buffer:char_right()
+          end
         end
       end
       buffer.virtual_space_options = virtual_space
