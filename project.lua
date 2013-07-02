@@ -30,7 +30,7 @@ M.DIRS = { _HOME, _USERHOME..'/modules' }
 -- project root.  If the project root is not found the file's directory
 -- is returned.
 function M.root()
-  local filename = buffer.filename
+  local filename = buffer.filename or ""
   local project_root
   if filename then
     for i=1, #M.DIRS do
@@ -40,7 +40,7 @@ function M.root()
       end
     end
   end
-  return project_root or buffer.filename:match('(.+)[/\\]')
+  return project_root or filename:match('(.+)[/\\]')
 end
 
 return M
