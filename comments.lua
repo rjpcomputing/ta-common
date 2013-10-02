@@ -1,6 +1,6 @@
 -- Adds comment strings. They can be overwritten in language modules.
 
-_M.textadept.editing.comment_string = {
+textadept.editing.comment_string = {
   actionscript = '// ',
   ada = '-- ',
   antlr = '// ',

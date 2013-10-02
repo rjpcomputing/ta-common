@@ -38,7 +38,7 @@ local function set_title(buffer)
   local buffer = buffer
   local filename = buffer.filename or buffer._type or _L['Untitled']
   local dirty = buffer.dirty and '*' or '-'
-  gui.title = string.format('%s %s Textadept (%s)', filename:match('[^/\\]+$'),
+  ui.title = string.format('%s %s Textadept (%s)', filename:match('[^/\\]+$'),
                             dirty, filename:gsub(pattern, replacement))
 end
 
@@ -70,42 +70,73 @@ events.connect('view_after_switch',
 -- Displays a dialog with a list of buffers to switch to and switches to the
 -- selected one, if any.
 function M.switch_buffer()
+  local columns, items = {_L['Name'], _L['File']}, {}
+  for _, buffer in ipairs(_BUFFERS) do
+    local filename = buffer.filename or buffer._type or _L['Untitled']
+    filename = filename:iconv('UTF-8', _CHARSET)
+    local basename = buffer.filename and filename:match('[^/\\]+$') or filename
+    items[#items + 1] = (buffer.dirty and '*' or '')..basename
+    items[#items + 1] = filename:gsub(pattern, replacement)
+  end
+  local button, i = ui.dialogs.filteredlist{
+    title = _L['Switch Buffers'], columns = columns, items = items,
+    width = CURSES and ui.size[1] - 2 or ui.size[1] - 100
+  }
+  if button == 1 and i then view:goto_buffer(i) end
+end
+
+--[[function M.switch_buffer()
   local columns, items = { _L['Name'], _L['File'] }, {}
   for _, buffer in ipairs(_BUFFERS) do
     local filename = buffer.filename or buffer._type or _L['Untitled']
     items[#items + 1] = (buffer.dirty and '*' or '')..filename:match('[^/\\]+$')
     items[#items + 1] = filename:gsub(pattern, replacement)
   end
-  local width = CURSES and {'--width', gui.size[1] - 2} or {'--width', gui.size[1] - 100}
-  local i = gui.filteredlist(_L['Switch Buffers'], columns, items, true, width)
+  local width = CURSES and {'--width', ui.size[1] - 2} or {'--width', ui.size[1] - 100}
+  local i = ui.dialogs.filteredlist(_L['Switch Buffers'], columns, items, true, width)
   if i then view:goto_buffer(i + 1) end
-end
+end]]
 
-function M.snapopen(utf8_paths, title, filter, exclude_FILTER, ...)
-  local list = {}
-  for utf8_path in utf8_paths:gmatch('[^\n]+') do
-    lfs.dir_foreach(utf8_path, function(file)
-      if #list >= io.SNAPOPEN_MAX then return false end
-      list[#list + 1] = file:gsub('^%.[/\\]', '')		-- Remove the ./ prefix from files
-                            :gsub(pattern, replacement)	-- Added path substitution
+function M.snapopen(paths, filter, exclude_FILTER, opts)
+  if type(paths) == 'string' then paths = {paths} end
+  local utf8_list = {}
+  for i = 1, #paths do
+    lfs.dir_foreach(paths[i], function(file)
+      if #utf8_list >= io.SNAPOPEN_MAX then return false end
+      file = file:gsub('^%.[/\\]', ''):gsub(pattern, replacement):iconv('UTF-8', _CHARSET)
+      utf8_list[#utf8_list + 1] = file
     end, filter, exclude_FILTER)
   end
-  local width = CURSES and {'--width', gui.size[1] - 2} or {'--width', gui.size[1] - 100}
-  local file = gui.filteredlist(title and title or _L['Open'], _L['File'], list, false,
-                                '--select-multiple', width, ...) or ''
-  file = file:gsub(replacement, pattern:gsub('^%^', ''))	-- Removed path substitution
-  io.open_file(file)
+  if #utf8_list >= io.SNAPOPEN_MAX then
+    local msg = string.format('%d %s %d', io.SNAPOPEN_MAX,
+                              _L['files or more were found. Showing the first'],
+                              io.SNAPOPEN_MAX)
+    ui.dialogs.msgbox{
+      title = _L['File Limit Exceeded'], text = msg, icon = 'gtk-dialog-info'
+    }
+  end
+  local options = {
+    title = _L['Open'], columns = _L['File'], items = utf8_list,
+    button1 = _L['_OK'], button2 = _L['_Cancel'], select_multiple = true,
+    string_output = true, width = CURSES and ui.size[1] - 2 or ui.size[1] - 100
+  }
+  if opts then for k, v in pairs(opts) do options[k] = v end end
+  local button, files = ui.dialogs.filteredlist(options)
+  if button ~= _L['_OK'] or not files then return end
+  for i = 1, #files do files[i] = files[i]:gsub(replacement, pattern:gsub('^%^', '')):iconv(_CHARSET, 'UTF-8') end
+  io.open_file(files)
 end
 
--- Prompts the user to open a recently opened file.
 function M.open_recent_file()
-	local shortRecentFileList = {}
-	for _, name in ipairs(io.recent_files) do
-		shortRecentFileList[#shortRecentFileList + 1] = name:gsub(pattern, replacement)
-	end
-	local width = CURSES and {'--width', gui.size[1] - 2} or {'--width', gui.size[1] - 100}
-	local i = gui.filteredlist('Open Recent', _L['File'], shortRecentFileList, true, width)
-	if i then io.open_file(io.recent_files[i + 1]:gsub(replacement, pattern:gsub('%^', ''))) end
+  local utf8_filenames = {}
+  for _, filename in ipairs(io.recent_files) do
+    utf8_filenames[#utf8_filenames + 1] = filename:gsub(pattern, replacement):iconv('UTF-8', _CHARSET)
+  end
+  local button, i = ui.dialogs.filteredlist{
+    title = _L['Open Recent'], columns = _L['File'], items = utf8_filenames,
+    width = CURSES and ui.size[1] - 2 or ui.size[1] - 100
+  }
+  if button == 1 and i then io.open_file(io.recent_files[i]:gsub(replacement, pattern:gsub('%^', ''))) end
 end
 
 return M

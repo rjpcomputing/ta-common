@@ -49,7 +49,7 @@
   <div class="pilwrap">
     <a class="pilcrow" href="#section-1">&#182;</a>
   </div>
-  
+
 <p>Inserts a filename with a (if possible) relative path
 from a file select dialog.</p>
 
@@ -64,7 +64,7 @@ from a file select dialog.</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-2">&#182;</a>
   </div>
-  
+
 <h2>Commands</h2>
 
 
@@ -78,7 +78,7 @@ from a file select dialog.</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-3">&#182;</a>
   </div>
-  
+
 <p>Opens a file select dialog and inserts filename in the buffer.</p>
 
 
@@ -90,7 +90,7 @@ from a file select dialog.</p>
     current_dir = _HOME
   <span class="k">end</span>
   filename =
-      gui.dialog(<span class="s">'fileselect'</span>,
+      ui.dialog(<span class="s">'fileselect'</span>,
                  <span class="s">'--title'</span>, <span class="s">"Insert filename"</span>,
                  <span class="s">'--select-multiple'</span>,
                  <span class="s">'--with-directory'</span>, current_dir)

@@ -50,7 +50,7 @@
   <div class="pilwrap">
     <a class="pilcrow" href="#section-1">&#182;</a>
   </div>
-  
+
 <p>Some additional theming, independent of the selected theme.</p>
 
 
@@ -64,7 +64,7 @@
   <div class="pilwrap">
     <a class="pilcrow" href="#section-2">&#182;</a>
   </div>
-  
+
 <p>See also the themes'
 <a href="http://code.google.com/p/textadept/source/browse/themes/light/buffer.lua">buffer.lua</a>
 and
@@ -92,7 +92,7 @@ for more options.</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-3">&#182;</a>
   </div>
-  
+
 <p>Set number margin for files with more than 1000 lines</p>
 
 
@@ -110,7 +110,7 @@ for more options.</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-4">&#182;</a>
   </div>
-  
+
 <p>Connect events.</p>
 
 
@@ -121,7 +121,7 @@ events.connect(<span class="s">'buffer_new'</span>, set_buffer_properties)
 events.connect(<span class="s">'view_new'</span>, set_buffer_properties)
 events.connect(<span class="s">'reset_after'</span>, <span class="k">function</span> ()
   <span class="k">for</span> i=1, #_VIEWS <span class="k">do</span>
-    gui.goto_view(1, <span class="k">true</span>)
+    ui.goto_view(1, <span class="k">true</span>)
     set_buffer_properties()
   <span class="k">end</span>
 <span class="k">end</span>)

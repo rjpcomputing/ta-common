@@ -49,7 +49,7 @@
   <div class="pilwrap">
     <a class="pilcrow" href="#section-1">&#182;</a>
   </div>
-  
+
 <p>Shorten display filenames in buffer title and switch buffer dialog.
 On Windows</p>
 <pre><code>C:\Documents and Settings\username\Desktop\...
@@ -80,7 +80,7 @@ On Windows</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-2">&#182;</a>
   </div>
-  
+
 <h2>Fields</h2>
 
 
@@ -95,7 +95,7 @@ On Windows</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-3">&#182;</a>
   </div>
-  
+
 <p>Read environment variable.</p>
 
 
@@ -115,7 +115,7 @@ On Windows</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-4">&#182;</a>
   </div>
-  
+
 <h2>Commands</h2>
 
 
@@ -129,7 +129,7 @@ On Windows</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-5">&#182;</a>
   </div>
-  
+
 <p>Sets the title of the Textadept window to the buffer's filename.
 Parameter:<br>
 <em>buffer</em>: The currently focused buffer.</p>
@@ -141,7 +141,7 @@ Parameter:<br>
   <span class="k">local</span> buffer = buffer
   <span class="k">local</span> filename = buffer.filename <span class="o">or</span> buffer._<span class="nt">type</span> <span class="o">or</span> _L[<span class="s">'Untitled'</span>]
   <span class="k">local</span> dirty = buffer.dirty <span class="o">and</span> <span class="s">'*'</span> <span class="o">or</span> <span class="s">'-'</span>
-  gui.title = string.format(<span class="s">'&#37;s &#37;s Textadept (&#37;s)'</span>, filename:match(<span class="s">'[^/\\]+$'</span>),
+  ui.title = string.format(<span class="s">'&#37;s &#37;s Textadept (&#37;s)'</span>, filename:match(<span class="s">'[^/\\]+$'</span>),
                             dirty, filename:gsub(pattern, replacement))
 <span class="k">end</span>
 </pre></div>
@@ -151,7 +151,7 @@ Parameter:<br>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-6">&#182;</a>
   </div>
-  
+
 <p>Connect to events that change the title.</p>
 
 

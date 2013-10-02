@@ -50,7 +50,7 @@
   <div class="pilwrap">
     <a class="pilcrow" href="#section-1">&#182;</a>
   </div>
-  
+
 <p>For supported filetypes, displays a filtered list dialog with symbols
 in the current document using
 <a href="http://ctags.sourceforge.net/">Exuberant Ctags</a>.<br>
@@ -83,7 +83,7 @@ In <code>~/.ctags</code>:</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-2">&#182;</a>
   </div>
-  
+
 <h2>Fields</h2>
 
 
@@ -97,7 +97,7 @@ In <code>~/.ctags</code>:</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-3">&#182;</a>
   </div>
-  
+
 <p>Path and options for the ctags utility can be defined in the <code>CTAGS</code>
 field.</p>
 
@@ -116,7 +116,7 @@ field.</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-4">&#182;</a>
   </div>
-  
+
 <h2>Commands</h2>
 
 
@@ -130,7 +130,7 @@ field.</p>
   <div class="pilwrap">
     <a class="pilcrow" href="#section-5">&#182;</a>
   </div>
-  
+
 <p>Goes to the selected symbol in a filtered list dialog.
 Requires <a href="(http://ctags.sourceforge.net/">ctags</a> to be installed.</p>
 
@@ -151,7 +151,7 @@ Requires <a href="(http://ctags.sourceforge.net/">ctags</a> to be installed.</p>
     <span class="k">end</span>
   <span class="k">end</span>
   <span class="k">if</span> #symbols > 0 <span class="k">then</span>
-    <span class="k">local</span> response = gui.dialog(<span class="s">'filteredlist'</span>,
+    <span class="k">local</span> response = ui.dialog(<span class="s">'filteredlist'</span>,
                                 <span class="s">'--title'</span>, <span class="s">'Goto Symbol'</span>,
                                 <span class="s">'--button1'</span>, <span class="s">'gtk-ok'</span>,
                                 <span class="s">'--button2'</span>, <span class="s">'gtk-cancel'</span>,

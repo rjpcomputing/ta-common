@@ -47,7 +47,7 @@ function M.goto_symbol()
     end
   end
   if #symbols > 0 then
-    local response = gui.dialog('filteredlist',
+    local response = ui.dialog('filteredlist',
                                 '--title', 'Goto Symbol',
                                 '--button1', 'gtk-ok',
                                 '--button2', 'gtk-cancel',
