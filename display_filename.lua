@@ -85,20 +85,19 @@ function M.switch_buffer()
   if button == 1 and i then view:goto_buffer(i) end
 end
 
---[[function M.switch_buffer()
-  local columns, items = { _L['Name'], _L['File'] }, {}
-  for _, buffer in ipairs(_BUFFERS) do
-    local filename = buffer.filename or buffer._type or _L['Untitled']
-    items[#items + 1] = (buffer.dirty and '*' or '')..filename:match('[^/\\]+$')
-    items[#items + 1] = filename:gsub(pattern, replacement)
-  end
-  local width = CURSES and {'--width', ui.size[1] - 2} or {'--width', ui.size[1] - 100}
-  local i = ui.dialogs.filteredlist(_L['Switch Buffers'], columns, items, true, width)
-  if i then view:goto_buffer(i + 1) end
-end]]
-
 function M.snapopen(paths, filter, exclude_FILTER, opts)
-  if type(paths) == 'string' then paths = {paths} end
+--  if type(paths) == 'string' then paths = {paths} end
+  local paths = paths or io.get_project_root()
+  if not paths then paths = buffer.filename:match('^(.+)[/\\]') end
+  if type(paths) == 'string' then
+    if not filter then
+      filter = io.snapopen_filters[paths]
+      if filter and type(exclude_FILTER) == "nil" then
+        exclude_FILTER = filter ~= lfs.FILTER
+      end
+    end
+    paths = {paths}
+  end
   local utf8_list = {}
   for i = 1, #paths do
     lfs.dir_foreach(paths[i], function(file)
@@ -133,7 +132,7 @@ function M.open_recent_file()
     utf8_filenames[#utf8_filenames + 1] = filename:gsub(pattern, replacement):iconv('UTF-8', _CHARSET)
   end
   local button, i = ui.dialogs.filteredlist{
-    title = _L['Open Recent'], columns = _L['File'], items = utf8_filenames,
+    title = 'Open Recent', columns = _L['File'], items = utf8_filenames,
     width = CURSES and ui.size[1] - 2 or ui.size[1] - 100
   }
   if button == 1 and i then io.open_file(io.recent_files[i]:gsub(replacement, pattern:gsub('%^', ''))) end
