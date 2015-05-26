@@ -86,13 +86,12 @@ function M.switch_buffer()
 end
 
 function M.snapopen(paths, filter, exclude_FILTER, opts)
---  if type(paths) == 'string' then paths = {paths} end
-  local paths = paths or io.get_project_root()
-  if not paths then paths = buffer.filename:match('^(.+)[/\\]') end
+  if buffer._type or nil == buffer.filename then return end
+  if not paths then paths = io.get_project_root() or buffer.filename:match('^(.+)[/\\]') end
   if type(paths) == 'string' then
     if not filter then
       filter = io.snapopen_filters[paths]
-      if filter and type(exclude_FILTER) == "nil" then
+      if filter and exclude_FILTER == nil then
         exclude_FILTER = filter ~= lfs.FILTER
       end
     end
@@ -125,6 +124,47 @@ function M.snapopen(paths, filter, exclude_FILTER, opts)
   for i = 1, #files do files[i] = files[i]:gsub(replacement, pattern:gsub('^%^', '')):iconv(_CHARSET, 'UTF-8') end
   io.open_file(files)
 end
+
+--function M.snapopen(paths, filter, exclude_FILTER, opts)
+--  --if type(paths) == 'string' then paths = {paths} end
+--  local paths = paths or io.get_project_root()
+--  if not paths then paths = buffer.filename:match('^(.+)[/\\]') end
+--  if type(paths) == 'string' then
+--    if not filter then
+--      filter = io.snapopen_filters[paths]
+--      if filter and type(exclude_FILTER) == "nil" then
+--        exclude_FILTER = filter ~= lfs.FILTER
+--      end
+--    end
+--    paths = {paths}
+--  end
+--  local utf8_list = {}
+--  for i = 1, #paths do
+--    lfs.dir_foreach(paths[i], function(file)
+--      if #utf8_list >= io.SNAPOPEN_MAX then return false end
+--      file = file:gsub('^%.[/\\]', ''):gsub(pattern, replacement):iconv('UTF-8', _CHARSET)
+--      utf8_list[#utf8_list + 1] = file
+--    end, filter, exclude_FILTER)
+--  end
+--  if #utf8_list >= io.SNAPOPEN_MAX then
+--    local msg = string.format('%d %s %d', io.SNAPOPEN_MAX,
+--                              _L['files or more were found. Showing the first'],
+--                              io.SNAPOPEN_MAX)
+--    ui.dialogs.msgbox{
+--      title = _L['File Limit Exceeded'], text = msg, icon = 'gtk-dialog-info'
+--    }
+--  end
+--  local options = {
+--    title = _L['Open'], columns = _L['File'], items = utf8_list,
+--    button1 = _L['_OK'], button2 = _L['_Cancel'], select_multiple = true,
+--    string_output = true, width = CURSES and ui.size[1] - 2 or ui.size[1] - 100
+--  }
+--  if opts then for k, v in pairs(opts) do options[k] = v end end
+--  local button, files = ui.dialogs.filteredlist(options)
+--  if button ~= _L['_OK'] or not files then return end
+--  for i = 1, #files do files[i] = files[i]:gsub(replacement, pattern:gsub('^%^', '')):iconv(_CHARSET, 'UTF-8') end
+--  io.open_file(files)
+--end
 
 function M.open_recent_file()
   local utf8_filenames = {}
