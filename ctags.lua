@@ -61,8 +61,22 @@ function M.goto_symbol()
       buffer:goto_line(tonumber(line) - 1)
       buffer:vertical_centre_caret()
     end
+  else
+    ui.statusbar_text = "No tags found"
   end
   p:close()
 end
 
+-- Add Ctags functions to the menubar.
+-- Connect to `events.INITIALIZED` in order to allow key bindings to be set up
+-- such that they reflect accurately in the menu.
+events.connect(events.INITIALIZED, function()
+  if not textadept.menu then return end
+  local tools = textadept.menu.menubar[4]
+  tools[#tools + 1] = {''} -- separator
+  tools[#tools + 1] = {
+    title = 'Ctags',
+    {'Goto Symbol', M.goto_symbol},
+  }
+end)
 return M

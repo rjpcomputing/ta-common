@@ -1,7 +1,6 @@
 -- Highlight the active buffer/view.
 
-local line_number_back =
-  buffer.style_back[_SCINTILLA.constants.STYLE_LINENUMBER]
+local line_number_back = buffer.style_back[_SCINTILLA.constants.STYLE_LINENUMBER]
 local current_line_back = buffer.caret_line_back
 
 local function active()

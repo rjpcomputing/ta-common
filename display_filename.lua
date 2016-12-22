@@ -90,7 +90,7 @@ function M.snapopen(paths, filter, exclude_FILTER, opts)
   if not paths then paths = io.get_project_root() or buffer.filename:match('^(.+)[/\\]') end
   if type(paths) == 'string' then
     if not filter then
-      filter = io.snapopen_filters[paths]
+      filter = io.quick_open_filters[paths]
       if filter and exclude_FILTER == nil then
         exclude_FILTER = filter ~= lfs.FILTER
       end
@@ -100,15 +100,15 @@ function M.snapopen(paths, filter, exclude_FILTER, opts)
   local utf8_list = {}
   for i = 1, #paths do
     lfs.dir_foreach(paths[i], function(file)
-      if #utf8_list >= io.SNAPOPEN_MAX then return false end
+      if #utf8_list >= io.quick_open_max then return false end
       file = file:gsub('^%.[/\\]', ''):gsub(pattern, replacement):iconv('UTF-8', _CHARSET)
       utf8_list[#utf8_list + 1] = file
     end, filter, exclude_FILTER)
   end
-  if #utf8_list >= io.SNAPOPEN_MAX then
-    local msg = string.format('%d %s %d', io.SNAPOPEN_MAX,
+  if #utf8_list >= io.quick_open_max then
+    local msg = string.format('%d %s %d', io.quick_open_max,
                               _L['files or more were found. Showing the first'],
-                              io.SNAPOPEN_MAX)
+                              io.quick_open_max)
     ui.dialogs.msgbox{
       title = _L['File Limit Exceeded'], text = msg, icon = 'gtk-dialog-info'
     }
@@ -131,7 +131,7 @@ end
 --  if not paths then paths = buffer.filename:match('^(.+)[/\\]') end
 --  if type(paths) == 'string' then
 --    if not filter then
---      filter = io.snapopen_filters[paths]
+--      filter = io.quick_open_filters[paths]
 --      if filter and type(exclude_FILTER) == "nil" then
 --        exclude_FILTER = filter ~= lfs.FILTER
 --      end
@@ -141,15 +141,15 @@ end
 --  local utf8_list = {}
 --  for i = 1, #paths do
 --    lfs.dir_foreach(paths[i], function(file)
---      if #utf8_list >= io.SNAPOPEN_MAX then return false end
+--      if #utf8_list >= io.quick_open_max then return false end
 --      file = file:gsub('^%.[/\\]', ''):gsub(pattern, replacement):iconv('UTF-8', _CHARSET)
 --      utf8_list[#utf8_list + 1] = file
 --    end, filter, exclude_FILTER)
 --  end
---  if #utf8_list >= io.SNAPOPEN_MAX then
---    local msg = string.format('%d %s %d', io.SNAPOPEN_MAX,
+--  if #utf8_list >= io.quick_open_max then
+--    local msg = string.format('%d %s %d', io.quick_open_max,
 --                              _L['files or more were found. Showing the first'],
---                              io.SNAPOPEN_MAX)
+--                              io.quick_open_max)
 --    ui.dialogs.msgbox{
 --      title = _L['File Limit Exceeded'], text = msg, icon = 'gtk-dialog-info'
 --    }

@@ -20,7 +20,7 @@ braces = { -- () [] {}
 
 -- Highlights matching braces, before and after a brace.
 -- Between two braces preference is to the left.
-events.connect('update_ui', function()
+events.connect(events.UPDATE_UI, function()
   local buffer = buffer
   local pos = buffer.current_pos
   if braces[buffer.char_at[pos - 1]] then pos = pos - 1 end
